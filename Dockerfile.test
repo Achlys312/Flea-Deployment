@@ -1,0 +1,38 @@
+# Using the base image
+FROM ubuntu:22.04
+
+#upgrading and Installing pip 
+RUN apt-get update && \
+    apt-get install -y python3-pip && \
+    pip3 install --upgrade pip
+
+# Install Chrome
+RUN apt install curl dpkg unzip -y
+RUN apt-get update 
+RUN apt upgrade -y
+
+RUN curl -LO "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
+RUN ar x google-chrome-stable_current_amd64.deb
+RUN tar -xf control.tar.xz
+RUN apt-get -f install -y
+RUN tar -xf data.tar.xz -C /
+
+# Copy the Django project files
+COPY . .
+
+# Install the dependencies
+RUN pip3 install -r requirements.txt
+
+# RUN python3 app/manage.py makemigrarions
+# Run any migrations
+RUN python3 app/manage.py migrate
+
+# Expose port 8000 for the Django development server
+EXPOSE 8000
+
+# # Set the entrypoint to run the tests
+RUN chmod +x test_entrypoint.sh
+
+ENTRYPOINT ["./test_entrypoint.sh"]
+
+# ENTRYPOINT python3 app/manage.py runserver 
