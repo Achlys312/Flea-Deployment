@@ -9,7 +9,7 @@ RUN apt-get update && \
 # Copy the Django project files
 COPY . .
 
-# Install the dependencies
+# Install the dependencies.
 RUN pip3 install -r requirements.txt
 
 # Expose port 8000 for the Django development server
