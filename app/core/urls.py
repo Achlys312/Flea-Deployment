@@ -4,16 +4,6 @@ from django.urls import path
 from . import views
 from .forms import LoginForm
 
-
-from django.urls import path
-from .views import my_view, metrics
-
-urlpatterns = [
-    path('my-view/', my_view, name='my-view'),
-    path('metrics/', metrics, name='metrics'),
-]
-
-
 app_name = 'core'
 
 urlpatterns = [
