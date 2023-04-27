@@ -5,6 +5,32 @@ from item.models import Category, Item
 from django.http import HttpResponse
 from .forms import SignupForm
 
+from prometheus_client import Counter, Histogram
+
+REQUEST_COUNT = Counter(
+    'request_count', 'Total request count', ['method', 'endpoint', 'http_status']
+)
+REQUEST_LATENCY = Histogram(
+    'request_latency_seconds', 'Request latency', ['method', 'endpoint', 'http_status']
+)
+
+
+@REQUEST_LATENCY.time()
+def my_view(request):
+    # Your view code here
+
+    # Increment the request count and record the request duration
+    REQUEST_COUNT.labels(request.method, request.path, response.status_code).inc()
+    return response
+
+def metrics(request):
+    from prometheus_client import generate_latest
+
+    # Expose the Prometheus metrics
+    return HttpResponse(generate_latest(), content_type='text/plain; version=0.0.4')
+
+
+
 def index(request):
     items = Item.objects.filter(is_sold=False)[0:6]
     categories = Category.objects.all()
