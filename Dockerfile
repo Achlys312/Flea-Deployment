@@ -14,6 +14,8 @@ RUN pip3 install -r requirements.txt
 
 # Expose port 8000 for the Django development server
 EXPOSE 8000
+# Configuring Prometheous
 
+EXPOSE 9000
 # Run the Django development server
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:8000", "app.puddle.wsgi:application"]
+ENTRYPOINT python3 app/manage.py runserver 0.0.0.0:8000
