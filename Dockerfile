@@ -6,7 +6,7 @@ RUN apt-get update && \
     apt-get install -y python3-pip && \
     pip3 install --upgrade pip
 
-# Copy the Django project files
+# Copy the Django project files..
 COPY . .
 
 # Install the dependencies.
