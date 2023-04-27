@@ -44,7 +44,7 @@ pipeline {
 
         stage('Monitor') {
             steps {
-                // Install Prometheus exporters and Python dependencies
+                // Install Prometheus exporters and Python dependencies.
                 sh 'pip install prometheus_client'
                 sh 'pip install requests'
 
