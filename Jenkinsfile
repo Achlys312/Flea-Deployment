@@ -14,31 +14,31 @@ pipeline {
         stage('Test') {
             steps {
              // Build the Docker image
-                sh 'sudo docker build -t my-django-app-test . -f Dockerfile.test'
+                sh 'docker build -t my-django-app-test . -f Dockerfile.test'
         
              // Run the tests inside a Docker container.
-                sh 'sudo docker run --rm -p 8000:8000 my-django-app-test '
+                sh 'docker run --rm -p 8000:8000 my-django-app-test '
             }
         }
 
         stage('Build') {
             steps {
-                sh 'sudo docker build -f $DOCKERFILE_PATH -t $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME .'
+                sh 'docker build -f $DOCKERFILE_PATH -t $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME .'
             }
         }
 
         stage('Push') {
             steps {
                 withCredentials([usernamePassword(credentialsId: "$DOCKER_REGISTRY_CREDENTIALS", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'sudo docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'sudo docker push $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME'
+                    sh 'docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh 'docker push $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME'
                 }
             }
         }
         
         stage('Deploy') {
             steps {
-                sh 'sudo docker run -d --name $DOCKER_IMAGE_NAME -p 8000:8000 $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME'
+                sh 'docker run -d --name $DOCKER_IMAGE_NAME -p 8000:8000 $DOCKER_REGISTRY/$DOCKER_USER/$DOCKER_IMAGE_NAME'
             }
         }
 
@@ -49,7 +49,7 @@ pipeline {
                 sh 'pip install requests'
 
                 // Start the Prometheus server
-                sh 'sudo docker run -d --name prometheus -p 9090:9090 prom/prometheus'
+                sh 'docker run -d --name prometheus -p 9090:9090 prom/prometheus'
 
                 // Start the Django app with gunicorn
                 sh 'pip install gunicorn'
